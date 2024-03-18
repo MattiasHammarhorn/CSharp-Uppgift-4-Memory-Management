@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
@@ -93,22 +94,25 @@ namespace SkalProj_Datastrukturer_Minne
             //  eftersom det är vad standard kapaciteten är satt till, och sedan 8, 16, 32, osv...
 
             //F4.Varför ökar inte listans kapacitet i samma takt som element läggs till?
+            //  När listans kapacitet överskrids så kopieras alla föremål över till en ny
+            //  array med större storlek.
 
             //5.Minskar kapaciteten när element tas bort ur listan ?
-            //  Nej, kapaciteten minskas inte.
+            //  Nej.
 
             //6.När är det då fördelaktigt att använda en egendefinierad array istället för en lista?
-            //  Bla
+            //  Då en array har en fixerad storlek så är den bättre att använda istället för en
+            //  lista om man vet att storleken på en kollektion inte kommer att ändras.
             Console.Clear();
             List<string> theList = new List<string>();
             string input, value = String.Empty;
-            int oldCapacity = 4;
 
             do
             {
                 Console.WriteLine("Enter a value starting with '+' or '-'" +
                         "\nIf the value is perceeded by a '+' it will be added to a list." +
                         "\nIf it's perceeded by a '-' the value will be removed from the list." +
+                        "\nPress '*' to print the current contents of the list." +
                         "\nPress '0' to exit back to the main menu.");
                 Console.Write("\nYour input: ");
 
@@ -121,22 +125,15 @@ namespace SkalProj_Datastrukturer_Minne
 
                     case '+':
                         theList.Add(value);
-                        
-                        if (oldCapacity != theList.Capacity)
-                            Console.WriteLine($"Capacity increased by {oldCapacity}!");
-                        oldCapacity = theList.Capacity;
-                        
-                        Console.WriteLine($"Current number of items in the list: {theList.Count}");
-                        Console.WriteLine($"Current capacity of the list: {theList.Capacity}");
+                        PrintListInformation(theList);
                         break;
                     case '-':
                         string entry = theList.Where(s => s.Equals(value)).FirstOrDefault();
                         theList.Remove(entry);
-                        Console.WriteLine($"Current number of items in the list: {theList.Count}");
-                        Console.WriteLine($"Current capacity of the list: {theList.Capacity}");
+                        PrintListInformation(theList);
                         break;
                     case '*':
-                        PrintContentsOfList(theList, oldCapacity);
+                        PrintCustomerList(theList);
                         break;
                     default:
                         Console.WriteLine("Please enter a valid input.");
@@ -145,12 +142,21 @@ namespace SkalProj_Datastrukturer_Minne
             } while (input != "0");
         }
 
-        static void PrintContentsOfList(List<string> strings, int oldCapacity)
+        static void PrintListInformation(List<string> strings)
         {
+            Console.WriteLine($"Current number of items in the list: {strings.Count}");
+            Console.WriteLine($"Current capacity of the list: {strings.Capacity}");
+            Console.WriteLine();
+        }
+
+        static void PrintCustomerList(List<string> strings)
+        {
+            Console.WriteLine("Customers in list:");
             foreach (var item in strings)
             {
-                Console.WriteLine(item);
+                Console.Write($"{item}\n");
             }
+            PrintListInformation(strings);
         }
 
         /// <summary>
@@ -166,7 +172,7 @@ namespace SkalProj_Datastrukturer_Minne
             Console.Clear();
             Queue<string> queue = new Queue<string>();
             string userInput = string.Empty;
-            int x = 0;
+            int customersAdded = 0;
 
             do
             {
@@ -179,19 +185,19 @@ namespace SkalProj_Datastrukturer_Minne
                 switch (userInput)
                 {
                     case "1":
-                        x++;
-                        queue.Enqueue("New customer added: Customer"+x);
+                        customersAdded++;
+                        queue.Enqueue($"\nNew customer added: Customer{customersAdded}");
                         break;
                     case "2":
-                        Console.WriteLine($"Customer removed from queue!!");
                         queue.Dequeue();
+                        Console.WriteLine($"\nA customer was removed from queue!");
                         break;
                     case "3":
                         Console.WriteLine("\nCurrent customers in queue:");
                         for (int i = 0; i < queue.Count; i++)
                         {
                             string customer = queue.ElementAt<string>(i);
-                            Console.WriteLine($"Customer {customer} with index {i+1}");
+                            Console.WriteLine($"\nCustomer {customer} with index {i+1}");
                         }
                         break;
                     default:
@@ -212,6 +218,10 @@ namespace SkalProj_Datastrukturer_Minne
              * Create a switch with cases to push or pop items
              * Make sure to look at the stack after pushing and and poping to see how it behaves
             */
+            //  1.Simulera ännu en gång ICA-kön på papper. Denna gång med en stack.Varför är det
+            //  inte så smart att använda en stack i det här fallet?
+            //  S: Då en stack arbetar med först-in sist-ut principen så skulle det betyda att den 
+            //  första kunden i kön skulle behöva vänta tills inom stack ramen.
             
         }
 
