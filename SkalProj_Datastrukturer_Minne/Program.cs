@@ -178,7 +178,7 @@ namespace SkalProj_Datastrukturer_Minne
             {
                 Console.WriteLine("1. Add a customer to the queue.");
                 Console.WriteLine("2. Expediate a customer from the queue.");
-                Console.WriteLine("3. Display queue.");
+                Console.WriteLine("3. Display customers in queue.");
                 Console.WriteLine("0. Exit.");
                 Console.Write("Your selection: ");
                 userInput = Console.ReadLine();
@@ -221,10 +221,84 @@ namespace SkalProj_Datastrukturer_Minne
             //  1.Simulera ännu en gång ICA-kön på papper. Denna gång med en stack.Varför är det
             //  inte så smart att använda en stack i det här fallet?
             //  S: Då en stack arbetar med först-in sist-ut principen så skulle det betyda att den 
-            //  första kunden i kön skulle behöva vänta tills inom stack ramen.
-            
+            //  första kunden i kön skulle behöva vänta tills alla andra kunder inom stack ramen
+            //  betalat.
+            Stack stack = new Stack();
+
+            //todo: add null check
+            string userInput = Console.ReadLine();
+            string nav = string.Empty;
+
+            do
+            {
+                Console.WriteLine("1. Push to the stack");
+                Console.WriteLine("2. Pop the stack");
+                Console.WriteLine("3. Reverse input");
+                Console.WriteLine("4. Check stack");
+                Console.WriteLine("0. Exit");
+                Console.Write("Your input: ");
+                nav = Console.ReadLine();
+                switch (nav)
+                {
+                    case "1":
+                        Console.WriteLine("Enter a string value which will be added to the stack.");
+                        Console.Write("Your input: ");
+                        userInput = Console.ReadLine();
+                        stack.Push(userInput);
+                        break;
+                    case "2":
+                        stack.Pop();
+                        Console.WriteLine("Item popped from stack!");
+                        break;
+                    case "3":
+                        Console.WriteLine("Enter a string value which will be added to the stack.");
+                        userInput = Console.ReadLine();
+                        Console.Write("Your input: ");
+                        Console.WriteLine(ReverseText(userInput));
+                        break;
+                    case "4":
+                        StackChecker(stack);
+                        break;
+                    default:
+                        Console.WriteLine();
+                        break;
+                }
+            } while (nav != "0");
+
         }
 
+        static string ReverseText(string userInput)
+        {
+            char[] userInputArray = userInput.ToCharArray();
+            Stack stringReverser = new Stack();
+            string toReturn = "";
+
+            foreach (var item in userInputArray)
+            {
+                stringReverser.Push(item);
+            }
+            foreach (var item in userInputArray)
+            {
+                toReturn += stringReverser.Pop();
+            }
+            return toReturn;
+        }
+
+        static void StackChecker(Stack stack)
+        {
+            int index = 0;
+            foreach (var item in stack)
+            {
+                Console.WriteLine($"String {item} with index {index}");
+                index++;
+            }
+        }
+
+        //  1. Skapa med hjälp av er nya kunskap funktionalitet för att kontrollera en välformad
+        //  sträng på papper.Du ska använda dig av någon eller några av de datastrukturer vi
+        //  precis gått igenom.Vilken datastruktur använder du?
+        //  S: En datastruktur likt stacken skulle kunna fungera här eftersom att den har koll på 
+        //  vilka variabler och undermetoder som lever inom ramen för en metod. 
         static void CheckParanthesis()
         {
             /*
@@ -232,7 +306,7 @@ namespace SkalProj_Datastrukturer_Minne
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
              * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
              */
-
+            
         }
     }
 }
