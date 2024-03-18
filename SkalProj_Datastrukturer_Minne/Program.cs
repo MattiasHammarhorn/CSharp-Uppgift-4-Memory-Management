@@ -298,7 +298,9 @@ namespace SkalProj_Datastrukturer_Minne
         //  sträng på papper.Du ska använda dig av någon eller några av de datastrukturer vi
         //  precis gått igenom.Vilken datastruktur använder du?
         //  S: En datastruktur likt stacken skulle kunna fungera här eftersom att den har koll på 
-        //  vilka variabler och undermetoder som lever inom ramen för en metod. 
+        //  vilka variabler och undermetoder som lever inom ramen för en metod. Eftersom jag inte 
+        //  kommer år så simulerar jag ramen för en metod inom stacken genom arrays och lists
+        //  istället.
         static void CheckParanthesis()
         {
             /*
@@ -306,7 +308,60 @@ namespace SkalProj_Datastrukturer_Minne
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
              * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
              */
-            
+            string userInput = "List<int> list = new List<int>() { 1, 2, 3, 4 )";
+            char[] userInputToCharArray = userInput.ToCharArray();
+
+            // Declare a list of parentheses to hold all the ones in the user input
+            List<char> parenthesesList = new List<char>();
+
+            for (int i = 0; i < userInputToCharArray.Length; i++)
+            {
+                if (userInput[i] == '(' || userInput[i] == '[' || userInput[i] == '{'||
+                    userInput[i] == ')' || userInput[i] == ']' || userInput[i] == '}')
+                    parenthesesList.Add(userInput[i]);
+            }
+            // Cast list containing parenthes into array since we can't grab entries by index in
+            // for loops
+            char[] parenthesesArray = parenthesesList.ToArray();
+
+            // loop from bottom of the "stack" to see if there is a match in the "top"
+            for (int i = 0; i < parenthesesArray.Length; i++)
+            {
+                var topIndex = parenthesesArray.Length - i;
+                var bottomItem = parenthesesArray[i];
+
+                // need a nested for loop to check from top of array down if a match can be made
+                // foreach item starting from the top, check if the closing parenthesis can be made
+                for (int j = topIndex; j > i; j--)
+                {
+                    if (bottomItem == '(' || parenthesesArray[topIndex] == ')')
+                    {
+                        parenthesesList.RemoveAt(i);
+                        parenthesesList.RemoveAt(topIndex);
+                    }
+                    else if (bottomItem == '[' || parenthesesArray[topIndex] == ']')
+                    {
+                        parenthesesList.RemoveAt(i);
+                        parenthesesList.RemoveAt(topIndex);
+                    }
+                    if (bottomItem == '{' || parenthesesArray[topIndex] == '}')
+                    {
+                        parenthesesList.RemoveAt(i);
+                        parenthesesList.RemoveAt(topIndex);
+                    }
+                }
+            }
+
+            foreach (var item in parenthesesList)
+            {
+                Console.WriteLine(item);
+            }
+
+            if (parenthesesArray.Length > 0)
+                Console.WriteLine("Format was incorrect!");
+            else
+                Console.WriteLine("Format was correct!");
+            Console.ReadLine();
         }
     }
 }
