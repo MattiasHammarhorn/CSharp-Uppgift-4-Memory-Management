@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Net.Sockets;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Runtime.ConstrainedExecution;
 
 namespace SkalProj_Datastrukturer_Minne
 {
@@ -95,7 +100,8 @@ namespace SkalProj_Datastrukturer_Minne
 
             //F4.Varför ökar inte listans kapacitet i samma takt som element läggs till?
             //  När listans kapacitet överskrids så kopieras alla föremål över till en ny
-            //  array med större storlek.
+            //  array med större storlek. Ur ett prestanda-perspektiv så kan det vara intressant 
+            //  att då inte behöva omdefiniera den underliggande arrayen för varje nytt element.
 
             //5.Minskar kapaciteten när element tas bort ur listan ?
             //  Nej.
@@ -213,6 +219,28 @@ namespace SkalProj_Datastrukturer_Minne
         /// </summary>
         static void ExamineStack()
         {
+            //  1.	Hur fungerar stacken och heapen? Förklara gärna med exempel eller skiss på dess grundläggande funktion.
+            //  Stacken ansvarar för att allokera minne åt variabler som deklarera inom eller returneras från metoder.Den lagrar främst värden av Value Types men kan även lagra referenser till objekt som lagras på heapen, och Struct - datatyper.Stackens struktur fungerar på en först -in-sist - ut nivå och kan liknas med en hög talrikar:
+            //  1.När en variabel deklareras i en metod så sparas den längst ner i stacken likt en talrik.
+            //  2.När metoden anropar en annan metod med parametrar så sparas parametrarna som talrikar som läggs på toppen.
+            //  3.När den andra metoden returnerar ett värde så tas den högsta talriken bort.
+            //  4.När den första metoden avslutats så tas alla talrikar bort i och med att de inte behövs längre.
+            //  Dvs.När variablerna i en metod använt så rensas de när de inte behövs längre, och på detta sätt så ser stacken till att minnet inte tar slut.
+            //  Referenser. [0]
+            //  https://endjin.com/blog/2022/07/understanding-the-stack-and-heap-in-csharp-dotnet
+
+           //Heapen förvarar Reference Types, d.v.s.större värden som objekt, klasser, interfaces, etc... T.ex.när ett objekt instantieras så allokeras minne för den någonstans i datorn, och en referens till det skapas på heapen.Till skillnad från stacken där alla värden endast kan kommas åt genom först -in-sist - ut, så har heapen alltid tillgång till alla värden samtidigt.Då värden på heapen stannar kvar tills(GC) Garbage Collection sker så kan det vara bra att ha itanke när man behöver Reference Types.
+            //2.Vad är Value Types respektive Reference Types och vad skiljer dem åt?
+            //Value Types är värden som ärver från System.ValueType - klassen och representarar mindre objekt som integers, booleans. De lagras huvudsakligen på stacken där de existerar inom ramen för metoder, men om de tillhör en property på en klass så lagras de också på heapen där de stannar kvar tills GC sker, även efter att stacken redan tagit bort dem.
+            //
+            //Reference Types tillhör större datatyper som klasser, interfaces och delegater – variabler som man kan tänkas behöva genom en större del av programmets gång.
+            //
+            //3.Följande metoder(se bild nedan) genererar olika svar.Den första returnerar 3, den
+            //andra returnerar 4, varför ?
+            //•	Den första metoden returnerar ”3” eftersom att variabeln ”x” som deklarerats tilldelas värde ”3” som inte ändras innan den returneras.
+            //•	Den andra metoden returnerar 4 eftersom att variabeln ”x” är en instans av ”MyInt”-klassen vars ”MyValue”-property tilldelas värdet ”4” i slutet av metoden. När ”y” tilldelas värdet ”x” så kopieras en referens från objektet ”x”på heapen till ”y” – d.v.s att båda variablerna nu refererar till samma objekt på heapen.
+
+
             /*
              * Loop this method until the user inputs something to exit to main menue.
              * Create a switch with cases to push or pop items
